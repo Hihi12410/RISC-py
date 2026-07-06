@@ -2,13 +2,14 @@
 #   License, v.2.0. If a copy of the MPL was not distributed with this file,
 #   You can obtain one at https://mozilla.org/MPL/2.0/.
 
-
 # Binutils - Utilities for bit manipulation.
-import functools
+
 from __future__ import annotations
+import functools
 from typing import Final, Any, overload, TypeAlias, Callable
 from enum import Enum
-from logging.logger import Logger
+from logutils.logger import Logger as logger
+import arith.arith as ar
 
 
 # Global setup - Endianness and significance
@@ -26,39 +27,42 @@ __AARCH:TypeAlias = tuple[__ENDIANNESS_ENUM, __SIGNIFICANCE_ENUM, int]
 __CONFIG_T:TypeAlias = tuple[__AARCH, __AARCH]
 __CONFIG:__CONFIG_T | None = None
 
+# Global logger.
+log:logger = None
+
 # Initialize module
 def init(host:__AARCH, target:__AARCH) -> None:
-    Logger.init("BinUtils")
+    
+    global __CONFIG, log
+
+    log = logger("BinUtils")
     if not host or not target:
-        Logger.error_log("The initialization of BinUtils failed.")
+        log.error_log("The initialization of BinUtils failed.")
         return
     __CONFIG = (host, target)
-    Logger.init_log(f"{host} targeting {target}.")
+    log.init_log(f"{host} targeting {target}.")
     
 # Assert module initialization.
-def __assert_init(x:Callable)->Callable|None:
+def _assert_init(x:Callable)->Callable|None:
     @functools.wraps(x)
     def bypass(*args, **kwargs):
         if __CONFIG is None:
-            Logger.error_log("Module is not initialized!")
+            log.error_log("Module is not initialized!")
             return None
         return x(*args, **kwargs)
     return bypass
 
-# Bitwise operations lib.
-class __bwops:
-    # Get first x bits of WORD from HOST format to HOST format..
-    @staticmethod
-    @__assert_init
-    def __gfb_host_tohost(x:Any, y:int):
-        if __CONFIG[0][0] == __SIGNIFICANCE_ENUM.LSBZ:
+# Bitwise operations
 
+# Assert HOST's WORDSIZE size WORD.
+@_assert_init
+def __assert_wordsz(x:Any) -> int:
+    return x & ar.__mask_range(0, __CONFIG[0][2]-1)
 
-
-        
-
-        
-
+# Assert TARGET's WORDSIZE size WORD.
+@_assert_init
+def __assert_wordsz(x:Any) -> int:
+    return x & ar.__mask_range(0, __CONFIG[1][2]-1)
 
 # WORD core functions.
 class __word_core:
@@ -78,7 +82,7 @@ class __word_core:
     def __init__WORD(_, w:WORD, value:int|str|tuple[int,...]|tuple[str,...]=0x0)->WORD:
         match value:
             case int(x):
-                
+                pass
             case str(s):
                 pass
             case tuple() as t:
@@ -99,5 +103,4 @@ class __word_core:
 # Word object - 8 bits.
 class WORD:
     # Setup
-    
-            
+    x = NotImplemented

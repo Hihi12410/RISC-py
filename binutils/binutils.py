@@ -21,6 +21,9 @@ class __SIGNIFICANCE_ENUM(Enum):
     MSBZ:int = 0x2
     LSBZ:int = 0x3
 
+# The WORD type.
+WORD:TypeAlias = tuple[int, __SIGNIFICANCE_ENUM]
+
 # __AARCH -> Endianness, Significance, Word size
 __AARCH:TypeAlias = tuple[__ENDIANNESS_ENUM, __SIGNIFICANCE_ENUM, int]
 # __CONFIG_T -> Host aarch, Target aarch
@@ -99,8 +102,3 @@ class __word_core:
     @staticmethod
     def __parse_int(_, x:int, )->int:
         return ()
-
-# Word object - 8 bits.
-class WORD:
-    # Setup
-    x = NotImplemented

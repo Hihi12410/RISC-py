@@ -8,7 +8,7 @@ from __future__ import annotations
 import functools
 from typing import Final, Any, overload, TypeAlias, Callable
 from enum import Enum
-from logutils.logger import Logger as logger
+import logutils.logger as logger
 import arith.arith as ar
 
 
@@ -26,79 +26,22 @@ WORD:TypeAlias = tuple[int, __SIGNIFICANCE_ENUM]
 
 # __AARCH -> Endianness, Significance, Word size
 __AARCH:TypeAlias = tuple[__ENDIANNESS_ENUM, __SIGNIFICANCE_ENUM, int]
-# __CONFIG_T -> Host aarch, Target aarch
-__CONFIG_T:TypeAlias = tuple[__AARCH, __AARCH]
-__CONFIG:__CONFIG_T | None = None
 
 # Global logger.
-log:logger = None
+log:logger.Logger = logger.Logger("binutils")
 
-# Initialize module
-def init(host:__AARCH, target:__AARCH) -> None:
-    
-    global __CONFIG, log
+# Parse AARCH parameters.
+# example ::: <0, 2, 32>
+def __parse_aarch(s:str)->__AARCH:
+    try:
+        dat:list[str] = s.split('<')[1].split('>')[0].split(',')
+        return __AARCH((dat[0], dat[1], dat[2]))
 
-    log = logger("BinUtils")
-    if not host or not target:
-        log.error_log("The initialization of BinUtils failed.")
-        return
-    __CONFIG = (host, target)
-    log.init_log(f"{host} targeting {target}.")
-    
-# Assert module initialization.
-def _assert_init(x:Callable)->Callable|None:
-    @functools.wraps(x)
-    def bypass(*args, **kwargs):
-        if __CONFIG is None:
-            log.error_log("Module is not initialized!")
-            return None
-        return x(*args, **kwargs)
-    return bypass
-
-# Bitwise operations
-
-# Assert HOST's WORDSIZE size WORD.
-@_assert_init
-def __assert_wordsz(x:Any) -> int:
-    return x & ar.__mask_range(0, __CONFIG[0][2]-1)
-
-# Assert TARGET's WORDSIZE size WORD.
-@_assert_init
-def __assert_wordsz(x:Any) -> int:
-    return x & ar.__mask_range(0, __CONFIG[1][2]-1)
-
-# WORD core functions.
-class __word_core:
-    @overload
-    @staticmethod
-    def __new__WORD(_, w:WORD, value:int)->WORD:...
-    @overload
-    @staticmethod
-    def __new__WORD(_, w:WORD, value:str)->WORD:...
-    @overload
-    @staticmethod
-    def __new__WORD(_, w:WORD, value:tuple[int, ...])->WORD:...
-    @overload
-    @staticmethod
-    def __new__WORD(_, w:WORD, value:tuple[str, ...])->WORD:...
-    @staticmethod
-    def __init__WORD(_, w:WORD, value:int|str|tuple[int,...]|tuple[str,...]=0x0)->WORD:
-        match value:
-            case int(x):
-                pass
-            case str(s):
-                pass
-            case tuple() as t:
-                match t[0]:
-                    case int(y):
-                        pass
-                    case str(z):
-                        pass
+    except Exception as e:
+        log.error_log(e.__str__())
+        return __AARCH
 
 
-    @staticmethod
-    def __new_WORD(_, x:WORD, y:int):
-        pass
-    @staticmethod
-    def __parse_int(_, x:int, )->int:
-        return ()
+# Assert AARCH's WORDSIZE size WORD.
+def __assert_wordsz(x:Any, aarch:__AARCH) -> int:
+    return x & ar.__mask_range(0, aarch[2]-1)

@@ -1,0 +1,1 @@
+[![Python LOC](https://img.shields.io/endpoint?url=https%3A%2F%2Fghloc.vercel.app%2Fapi%2FHihi12410%2FRISC-py%2Fbadge%3Fbranch%3Dmain%26filter%3D.py)](https://ghloc.vercel.app/Hihi12410/RISC-py?branch=main&filter=.py)

@@ -58,3 +58,22 @@ def __lfiles(fpath:str)->list[str]:
         log.error_log(e.__str__())
         return [""]
 
+# Open file for text-mode writing.
+def __open_w(fpath:str)->IO:
+    f:object = None
+    try:
+        f = open(path.abspath(fpath), "w")
+        log.log(f"Opened {fpath} for binary writing.")
+    except Exception as e:
+        log.error_log(e.__str__())
+    return f
+
+# Open file for text-mode reading.
+def __open_r(fpath:str)->IO:
+    f:object = None
+    try:
+        f = open(path.abspath(fpath), "r")
+        log.log(f"Opened {fpath} for binary writing.")
+    except Exception as e:
+        log.error_log(e.__str__())
+    return f

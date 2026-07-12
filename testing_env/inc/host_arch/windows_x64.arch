@@ -1,0 +1,15 @@
+This is an architecture descriptor file.
+
+Number 1:
+    Endianness:
+        LSB: 0
+        MSB: 1
+Number 2:
+    Significance:
+        LSBiZ (Least Significant Bit First): 0
+        MSBiZ (Most Significant Bit First): 1
+
+Number 3:
+    Size of word in bits.
+
+<0, 0, 8>

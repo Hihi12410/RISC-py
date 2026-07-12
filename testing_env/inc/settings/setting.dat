@@ -1,0 +1,6 @@
+# Settings file. Use the format "FIELD" : "VALUE". 
+
+# File paths.
+"host_arch_path" : "/testing/inc/host_arch"
+"target_arch_path" : "/testing/inc/target_arch"
+"std_libs" : "/testing/inc/std"

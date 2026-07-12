@@ -14,34 +14,35 @@ import arith.arith as ar
 
 # Global setup - Endianness and significance
 class __ENDIANNESS_ENUM(Enum):
-    BIG:int = 0x0
-    LITTLE:int = 0x1
+    LSB:int = 0x0
+    MSB:int = 0x1
 
 class __SIGNIFICANCE_ENUM(Enum):
-    MSBZ:int = 0x2
-    LSBZ:int = 0x3
+    LSBiZ:int = 0x0
+    MSBiZ:int = 0x1
 
 # The WORD type.
 WORD:TypeAlias = tuple[int, __SIGNIFICANCE_ENUM]
 
-# __AARCH -> Endianness, Significance, Word size
-__AARCH:TypeAlias = tuple[__ENDIANNESS_ENUM, __SIGNIFICANCE_ENUM, int]
+# __ARCH -> Endianness, Significance, Word size
+__ARCH:TypeAlias = tuple[__ENDIANNESS_ENUM, __SIGNIFICANCE_ENUM, int]
 
 # Global logger.
 log:logger.Logger = logger.Logger("binutils")
 
-# Parse AARCH parameters.
+# Parse _ARCH parameters.
 # example ::: <0, 2, 32>
-def __parse_aarch(s:str)->__AARCH:
+def __parse_arch(s:str)->__ARCH:
     try:
         dat:list[str] = s.split('<')[1].split('>')[0].split(',')
-        return __AARCH((dat[0], dat[1], dat[2]))
+        print(dat)
+        return __ARCH((int(dat[0].strip()), int(dat[1].strip()), int(dat[2].strip())))
 
     except Exception as e:
         log.error_log(e.__str__())
-        return __AARCH
+        return __ARCH
 
 
 # Assert AARCH's WORDSIZE size WORD.
-def __assert_wordsz(x:Any, aarch:__AARCH) -> int:
+def __assert_wordsz(x:Any, aarch:__ARCH) -> int:
     return x & ar.__mask_range(0, aarch[2]-1)

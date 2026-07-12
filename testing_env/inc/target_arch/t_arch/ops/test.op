@@ -1,0 +1,10 @@
+# .op file.
+# This file describes a template.
+
+NOEXPAND                                        # Marked as NOEXPAND - Don't expand the template.
+
+SEC op                                          # Section "op". 
+    <u8 12, 11, 24, 23, 34, 35, 34, 123, 11>    # Data.
+END                                             # End section.
+
+EXPORT op                                       # Export into place of template.

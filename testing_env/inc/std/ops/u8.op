@@ -1,0 +1,7 @@
+# 8 bit byte.
+
+SEC op
+CALL "handle_number_expand"
+END
+
+EXPORT op

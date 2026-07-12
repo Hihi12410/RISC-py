@@ -1,0 +1,10 @@
+# This is a comment
+
+HOST : "windows_x64"    # Set host as "windows_x64". 
+TARGET : "t_arch"       # Set target as "t_arch".
+
+SECTION data            # Set section "data"
+<u(8) 1, 23, 31, 20>    # Unsigned integers of size 8.
+SECEND data             # End section.
+
+.data                   # Write out data.
